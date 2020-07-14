@@ -1,33 +1,32 @@
 package utils;
 
-import config.SpringConfig;
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import pages.MainPage;
 
 import java.util.concurrent.TimeUnit;
 
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {SpringConfig.class})
+@RunWith(Cucumber.class)
+@CucumberOptions(
+        plugin = {"pretty", "html:target/cucumber"},
+        features = {"src/main/java/features"},
+        glue = "glue")
 public class BaseHooks {
+    protected static WebDriver driver;
 
-   /* @Autowired
-    public MainPage mainPage;*/
-
-    @Autowired
-    protected WebDriver driver;
+    private static Logger logger = LogManager.getLogger(BaseHooks.class);
 
     @BeforeClass
-    public void setUp() {
+    public static void setUp() {
+        driver = Browsers.valueOf(System.getProperty("browser").toUpperCase()).create();
+        logger.info("Драйвер поднят");
+
         if (driver != null) {
             driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
             driver.manage().window().maximize();
@@ -35,7 +34,7 @@ public class BaseHooks {
     }
 
     @AfterClass
-    public void tearDown() {
+    public static void tearDown() {
         if (driver != null) {
             driver.quit();
         }
@@ -45,4 +44,5 @@ public class BaseHooks {
     public void cleanUp() {
         driver.manage().deleteAllCookies();
     }
+
 }

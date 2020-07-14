@@ -25,7 +25,6 @@ public enum Browsers {
         }
     };
 
-
     public WebDriver create(){
         return null;
     }
