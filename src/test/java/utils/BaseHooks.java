@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         plugin = {"pretty", "html:target/cucumber"},
-        features = {"src/main/java/features"},
+        features = {"src/test/java/features"},
         glue = "glue")
 public class BaseHooks {
     protected static WebDriver driver;
