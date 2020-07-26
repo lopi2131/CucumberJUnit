@@ -1,0 +1,34 @@
+pipeline {
+   agent any
+    tools{
+    maven "maven"
+    jdk "jdk"
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo "It's Build"
+                git credentialsId: 'ce671b7f-e0b8-41c6-89d6-bbeeb9921152', url: 'https://github.com/lopi2131/PageObjectSelenoidAllure' 
+                echo "Stop build"
+            }
+        }
+		stage('Clean') {
+            steps {
+                echo "tests execute"
+                bat 'mvn clean'
+            }
+        }
+		stage('Test') {
+            steps {
+                echo "tests run"
+                bat 'mvn test'
+            }
+        }
+		stage('Results') {
+            steps {
+                echo "report"
+                bat "allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]"
+            }
+        }
+    }
+}
